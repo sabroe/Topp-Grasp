@@ -3,4 +3,8 @@ plugins.withType(JavaPlugin) {
         withJavadocJar()
         withSourcesJar()
     }
+
+    sourcesJar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE  //Added to address Quarkus '3.0.4.Final'! Should not otherwise be necessary.
+    }
 }

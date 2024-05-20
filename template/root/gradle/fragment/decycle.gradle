@@ -17,16 +17,27 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'java-library-distribution'
-    id 'jacoco'
-    id 'maven-publish'
-    id 'signing'
-}
+tasks.withType(JavaCompile) {
+    apply plugin: "de.obqo.decycle"
 
-dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.32'
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'
-
-    implementation 'org.slf4j:slf4j-api:2.0.13'
+    decycle {
+/*
+        sourceSets sourceSets.main, sourceSets.test, ...
+        including 'org.example.includes.**', ...
+        excluding 'org.example.excludes.**', ...
+        ignoring from: 'org.examples.from.Example', to: 'org.examples.to.**'
+        slicings {
+            name1 {
+                patterns 'org.example.{*}.**', ...
+                allow 'a', 'b', ...
+                allowDirect 'x', anyOf('y', 'z'), ...
+            }
+            name2 {
+                ...
+            }
+        }
+*/
+        ignoreFailures false
+        reportsEnabled true
+    }
 }

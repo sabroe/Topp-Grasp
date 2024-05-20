@@ -1,3 +1,22 @@
+/*
+ * Project: Topp-Grasp
+ * GitHub: https://github.com/sabroe/Topp-Grasp
+ *
+ * Copyright 2022-2024 Morten Sabroe Mortensen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 def projectNameC14N = "${project.name.replaceAll(' ', '-')}"
 logger.info(":> Project name canonicalization: ${projectNameC14N}.")
 
@@ -5,9 +24,11 @@ def baseNamePrefix = custom['archives.base-name-prefix'] ?: ""
 logger.info(":> Base name prefix: ${baseNamePrefix}.")
 
 plugins.withType(JavaLibraryDistributionPlugin) {
+    base {
+        archivesName = "${baseNamePrefix}${projectNameC14N}"
+    }
     distributions {
         main {
-            archivesBaseName = "${baseNamePrefix}${projectNameC14N}"
             distZip {
                 duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             }
@@ -15,10 +36,8 @@ plugins.withType(JavaLibraryDistributionPlugin) {
     }
 }
 
-plugins.withType(ApplicationPlugin) {
-    distributions {
-        main {
-            archivesBaseName = "${baseNamePrefix}${projectNameC14N}"
-        }
+plugins.withType(BasePlugin) {
+    base {
+        archivesName = "${baseNamePrefix}${projectNameC14N}"
     }
 }

@@ -28,12 +28,11 @@ plugins {
     id "checkstyle"
     id "jacoco"
     id "de.obqo.decycle" version "1.1.1" apply false
-//    id "org.owasp.dependencycheck" version "9.0.10"
+    id 'org.cyclonedx.bom' version '1.8.2' apply false
 }
 
 def fragmentDir = "${rootProject.projectDir}/gradle/fragment"
 apply from: "${fragmentDir}/custom-properties.gradle"
-//apply from: "${fragmentDir}/check-vulnerability.gradle"
 
 allprojects {
     repositories {
@@ -54,6 +53,7 @@ subprojects {
     apply from: "${fragmentDir}/lombok.gradle"
     apply from: "${fragmentDir}/junit.gradle"
     apply from: "${fragmentDir}/decycle.gradle"
+    apply from: "${fragmentDir}/cyclonedx.gradle"
 }
 
 /*

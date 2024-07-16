@@ -1,4 +1,4 @@
-# Topp Grasp // Yelstream v/Morten Sabroe Mortensen
+# Topp Grasp // Yelstream
 Templates for Gradle build files.
 
 ## Versions

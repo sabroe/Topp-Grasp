@@ -19,27 +19,25 @@
 
 /*
  * Note:
- *     To inspect the content of build BOM files, consider this command for ad hoc inspection:
- *     find . -name bom.* | grep -E "(.*)/build/reports/(.*)(bom.xml|bom.json)" | while read r; do echo; echo $r; head -n30 $r; done | less
+ *     To inspect the content of build Java archives, consider this command for ad hoc inspection:
+ *     find . -name *.jar | grep -E "(.*)/build/libs/[^/]*-[0-9]+[.][0-9]+[.][0-9]+(-SNAPSHOT)?[.]jar" | while read r; do echo; echo $r; unzip -p $r git.properties; done
  */
 
 tasks.withType(JavaCompile) {
-    apply plugin: 'org.cyclonedx.bom'
+    apply plugin: "com.gorylenko.gradle-git-properties"  //https://github.com/n0mer/gradle-git-properties
 
-    cyclonedxBom {
-        includeConfigs = ["runtimeClasspath"]
+    gitProperties {
+        gitPropertiesName = "git.properties"
 
-        skipConfigs = ["compileClasspath", "testCompileClasspath"]
+        failOnNoGitDirectory = false
 
-        skipProjects = [rootProject.name]
-
-//        projectType = "application"
-        projectType = "library"
-
-        destination = file("build/reports/cyclonedx")
-
-        outputName = "bom"
-
-        outputFormat = "all"
+/*
+        keys =
+        [
+            'git.branch',
+            'git.commit.id',
+            'git.commit.time'
+        ]
+*/
     }
 }

@@ -29,6 +29,7 @@ plugins {
     id "jacoco"
     id "de.obqo.decycle" version "1.1.1" apply false
     id 'org.cyclonedx.bom' version '1.8.2' apply false
+    id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false
 }
 
 def fragmentDir = "${rootProject.projectDir}/gradle/fragment"
@@ -54,6 +55,7 @@ subprojects {
     apply from: "${fragmentDir}/junit.gradle"
     apply from: "${fragmentDir}/decycle.gradle"
     apply from: "${fragmentDir}/cyclonedx.gradle"
+    apply from: "${fragmentDir}/git-properties.gradle"
 }
 
 /*

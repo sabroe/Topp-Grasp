@@ -35,8 +35,31 @@ plugins.withType(JavaPlugin) {
     }
 
     javadoc {
+        /*
+         * See
+         *     https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+         */
+
         failOnError = false
         options.encoding = defaultEncoding
+
+        options.author = (custom['javadoc.author']?:true)
+        options.version = (custom['javadoc.version']?:true)
+        options.use = (custom['javadoc.use']?:false)
+        options.noDeprecatedList = (custom['javadoc.no-deprecated-list']?:false)
+        options.noSince = (custom['javadoc.no-since']?:false)
+
+        options.addBooleanOption('Xdoclint:all', (custom['javadoc.x.doclint.all']?:true))
+        options.addBooleanOption('Xdoclint:none', (custom['javadoc.x.doclint.all']?:false))
+
+        options.addBooleanOption('Xdoclint:accessibility', (custom['javadoc.x.doclint.accessibility']?:false))
+        options.addBooleanOption('Xdoclint:html', (custom['javadoc.x.doclint.html']?:false))
+        options.addBooleanOption('Xdoclint:missing', (custom['javadoc.x.doclint.missing']?:false))
+        options.addBooleanOption('Xdoclint:reference', (custom['javadoc.x.doclint.reference']?:false))
+        options.addBooleanOption('Xdoclint:syntax', (custom['javadoc.x.doclint.syntax']?:false))
+
+        options.addStringOption('Xmaxerrs', (custom['javadoc.x.maxerrs']?:'25'))
+        options.addStringOption('Xmaxwarns', (custom['javadoc.x.maxwarns']?:'25'))
     }
 }
 

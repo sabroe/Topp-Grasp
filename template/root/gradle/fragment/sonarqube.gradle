@@ -20,11 +20,24 @@
 tasks.withType(JavaCompile) {
     apply plugin: "org.sonarqube"
 
-    sonarqube {
+    sonar {
+//        isSkipProject = true
         properties {
-            //https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-gradle/
+            //https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner-for-gradle/
             //property "sonar.sourceEncoding", "UTF-8"
             //property "sonar.sources", "src"
+        }
+    }
+
+/*
+    tasks.check {
+        dependsOn tasks.sonar
+    }
+*/
+
+    tasks.check {
+        if (project.hasProperty("runSonar") && project.property("runSonar") == "true") {
+            dependsOn tasks.sonar
         }
     }
 }

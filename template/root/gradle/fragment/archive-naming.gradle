@@ -29,6 +29,9 @@ plugins.withType(JavaLibraryDistributionPlugin) {
     }
     distributions {
         main {
+            distTar {
+                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            }
             distZip {
                 duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             }

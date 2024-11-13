@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-plugins.withType(JavaLibraryPlugin) {
+plugins.withType(JavaPlugin) {  //Note: 'JavaPlugin' includes 'JavaLibraryPlugin'; both intermediate libraries and end-applications are included!
     dependencies {
         compileOnly 'org.projectlombok:lombok:1.18.34'
         annotationProcessor 'org.projectlombok:lombok:1.18.34'

@@ -20,6 +20,7 @@
 buildscript {
     repositories {
         mavenCentral()
+        mavenLocal()
     }
 }
 
@@ -38,6 +39,7 @@ apply from: "${fragmentDir}/custom-properties.gradle"
 allprojects {
     repositories {
         mavenCentral()
+        mavenLocal()
     }
     apply from: "${fragmentDir}/project-report.gradle"
 }

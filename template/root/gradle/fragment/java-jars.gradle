@@ -22,4 +22,8 @@ plugins.withType(JavaPlugin) {
         withJavadocJar()
         withSourcesJar()
     }
+
+    sourcesJar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
 }

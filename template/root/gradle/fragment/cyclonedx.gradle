@@ -17,6 +17,12 @@
  * limitations under the License.
  */
 
+/*
+ * Note:
+ *     To inspect the content of build BOM files, consider this command for ad hoc inspection:
+ *     find . -name bom.* | grep -E "(.*)/build/reports/(.*)(bom.xml|bom.json)" | while read r; do echo; echo $r; head -n30 $r; done | less
+ */
+
 tasks.withType(JavaCompile) {
     apply plugin: 'org.cyclonedx.bom'
 

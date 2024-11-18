@@ -18,17 +18,26 @@
  */
 
 plugins.withType(JavaPlugin) {  //Note: 'JavaPlugin' includes 'JavaLibraryPlugin'; both intermediate libraries and end-applications are included!
-    def enableFeatureText = custom['feature.lombok.enable']?.toString()?.trim()
+    def enableFeatureText = custom['feature.slf4j.enable']?.toString()?.trim()
     def enableFeature = enableFeatureText ? enableFeatureText.toBoolean() : true
     if (!enableFeature) {
-        logger.debug("Feature 'Lombok' is disabled.")
+        logger.debug("Feature 'SLF4J' is disabled.")
     } else {
         dependencies {
-            compileOnly 'org.projectlombok:lombok:1.18.34'
-            annotationProcessor 'org.projectlombok:lombok:1.18.34'
+            if (dependencies.metaClass.respondsTo(dependencies, 'api')) {
+                //Use 'api' if available (implies java-library plugin is applied)
+                api 'org.slf4j:slf4j-api:2.0.16'
+                api 'org.slf4j:slf4j-ext:2.0.16'
+            } else {
+                //Fallback to 'implementation' (implies only java plugin is applied)
+                implementation 'org.slf4j:slf4j-api:2.0.16'
+                implementation 'org.slf4j:slf4j-ext:2.0.16'
+            }
 
-            testCompileOnly 'org.projectlombok:lombok:1.18.34'
-            testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+            //Apply testImplementation only for intermediate libraries
+            if (plugins.hasPlugin('java-library')) {
+                testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+            }
         }
     }
 }

@@ -20,11 +20,32 @@
 tasks.withType(JavaCompile) {
     apply plugin: "org.sonarqube"
 
-    sonarqube {
+    //https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner-for-gradle/
+    //https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-gradle/
+
+    sonar  {
+//        isSkipProject = false
         properties {
-            //https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-gradle/
-            //property "sonar.sourceEncoding", "UTF-8"
-            //property "sonar.sources", "src"
+            property "sonar.token", System.getenv("SONARQUBE_TOKEN") ?: ""
+            property "sonar.host.url", System.getenv("SONARQUBE_HOST") ?: "http://localhost:9000"
+
+            def rootKey = "${rootProject.group}:${rootProject.name}"
+            def moduleKey = "${project.path}"
+            def projectKey = project == rootProject ? rootKey : "${rootKey}${moduleKey}"  //SonarQube "project key" as defined by the documentation!
+            def sanitizedProjectKey = projectKey.replaceAll("\\s+", "-")
+
+            property "sonar.projectKey", sanitizedProjectKey
+
+            property "sonar.verbose", "true"
+            property "sonar.profile", "Sonar way"
+        }
+    }
+
+//    project.tasks["sonar"].dependsOn "anotherTask"
+
+    tasks.check {
+        if (project.hasProperty("runSonar") && project.property("runSonar") == "true") {
+            dependsOn tasks.sonar
         }
     }
 }

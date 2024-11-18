@@ -24,11 +24,12 @@ buildscript {
 }
 
 plugins {
-    id "org.sonarqube" version "3.5.0.2730" apply false
+    id "org.sonarqube" version "5.1.0.4882" apply false
     id "checkstyle"
     id "jacoco"
-    id "de.obqo.decycle" version "1.1.1" apply false
-    id 'org.cyclonedx.bom' version '1.8.2' apply false
+    id "de.obqo.decycle" version "1.2.1" apply false
+    id 'org.cyclonedx.bom' version '1.10.0' apply false
+    id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false
 }
 
 def fragmentDir = "${rootProject.projectDir}/gradle/fragment"
@@ -51,9 +52,11 @@ subprojects {
     apply from: "${fragmentDir}/publish.gradle"
     apply from: "${fragmentDir}/sonarqube.gradle"
     apply from: "${fragmentDir}/lombok.gradle"
+    apply from: "${fragmentDir}/slf4j.gradle"
     apply from: "${fragmentDir}/junit.gradle"
     apply from: "${fragmentDir}/decycle.gradle"
     apply from: "${fragmentDir}/cyclonedx.gradle"
+    apply from: "${fragmentDir}/git-properties.gradle"
 }
 
 /*

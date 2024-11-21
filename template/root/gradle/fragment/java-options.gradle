@@ -61,23 +61,23 @@ plugins.withType(JavaPlugin) {
         failOnError = false
         options.encoding = defaultEncoding
 
-        options.author = (custom['javadoc.author']?:true)
-        options.version = (custom['javadoc.version']?:true)
-        options.use = (custom['javadoc.use']?:false)
-        options.noDeprecatedList = (custom['javadoc.no-deprecated-list']?:false)
-        options.noSince = (custom['javadoc.no-since']?:false)
+        options.author = (custom['javadoc.author'] ?: true) as Boolean
+        options.version = (custom['javadoc.version'] ?: true) as Boolean
+        options.use = (custom['javadoc.use'] ?: false) as Boolean
+        options.noDeprecatedList = (custom['javadoc.no-deprecated-list'] ?: false) as Boolean
+        options.noSince = (custom['javadoc.no-since'] ?: false) as Boolean
 
-        options.addBooleanOption('Xdoclint:all', (custom['javadoc.x.doclint.all']?:true))
-        options.addBooleanOption('Xdoclint:none', (custom['javadoc.x.doclint.all']?:false))
+        options.addBooleanOption('Xdoclint:all', (custom['javadoc.x.doclint.all'] ?: true) as Boolean)
+        options.addBooleanOption('Xdoclint:none', (custom['javadoc.x.doclint.none'] ?: false) as Boolean)
 
-        options.addBooleanOption('Xdoclint:accessibility', (custom['javadoc.x.doclint.accessibility']?:false))
-        options.addBooleanOption('Xdoclint:html', (custom['javadoc.x.doclint.html']?:false))
-        options.addBooleanOption('Xdoclint:missing', (custom['javadoc.x.doclint.missing']?:false))
-        options.addBooleanOption('Xdoclint:reference', (custom['javadoc.x.doclint.reference']?:false))
-        options.addBooleanOption('Xdoclint:syntax', (custom['javadoc.x.doclint.syntax']?:false))
+        options.addBooleanOption('Xdoclint:accessibility', (custom['javadoc.x.doclint.accessibility'] ?: false) as Boolean)
+        options.addBooleanOption('Xdoclint:html', (custom['javadoc.x.doclint.html'] ?: false) as Boolean)
+        options.addBooleanOption('Xdoclint:missing', (custom['javadoc.x.doclint.missing'] ?: false) as Boolean)
+        options.addBooleanOption('Xdoclint:reference', (custom['javadoc.x.doclint.reference'] ?: false) as Boolean)
+        options.addBooleanOption('Xdoclint:syntax', (custom['javadoc.x.doclint.syntax'] ?: false) as Boolean)
 
-        options.addStringOption('Xmaxerrs', (custom['javadoc.x.maxerrs']?:'25'))
-        options.addStringOption('Xmaxwarns', (custom['javadoc.x.maxwarns']?:'25'))
+        options.addStringOption('Xmaxerrs', (custom['javadoc.x.maxerrs'] ?: '25').toString())
+        options.addStringOption('Xmaxwarns', (custom['javadoc.x.maxwarns'] ?: '25').toString())
     }
 }
 

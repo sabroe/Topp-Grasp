@@ -22,7 +22,7 @@
  *     To publish, run the task 'publish'.
  */
 
-plugins.withType(MavenPublishPlugin) {
+plugins.withType(MavenPublishPlugin) {  //https://docs.gradle.org/current/userguide/publishing_maven.html
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
@@ -100,8 +100,19 @@ plugins.withType(MavenPublishPlugin) {
     }
 }
 
-plugins.withType(SigningPlugin) {
+plugins.withType(SigningPlugin) {  //https://docs.gradle.org/current/userguide/publishing_signing.html
     signing {
+        def enableFeatureText = custom['feature.sign.allow-in-memory-keys.enable']?.toString()?.trim()
+        def enableFeature = enableFeatureText ? enableFeatureText.toBoolean() : true
+        if (enableFeature) {
+            def privateKey = System.getenv("GPG_PRIVATE_KEY")
+            def passphrase = System.getenv("GPG_PASSPHRASE")
+
+            if (privateKey) {
+                useInMemoryPgpKeys(privateKey, passphrase ?: "")
+            }
+        }
+
         sign publishing.publications.mavenJava
     }
 }

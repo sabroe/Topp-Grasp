@@ -18,13 +18,15 @@
  */
 
 plugins.withType(JavaPlugin) {  //Note: 'JavaPlugin' includes 'JavaLibraryPlugin'; both intermediate libraries and end-applications are included!
+    logger.debug("[${buildscript.sourceFile.name}]:> Plugins applied: ${plugins*.class.simpleName}")
     def enableFeatureText = custom['feature.junit.enable']?.toString()?.trim()
     def enableFeature = enableFeatureText ? enableFeatureText.toBoolean() : true
     if (!enableFeature) {
         logger.debug("Feature 'JUnit' is disabled.")
     } else {
         dependencies {
-            testImplementation(platform('org.junit:junit-bom:5.11.3'))
+            logger.debug("[${buildscript.sourceFile.name}]:> Applying 'testImplementation' dependencies.")
+            testImplementation(platform('org.junit:junit-bom:5.11.4'))
             testImplementation 'org.junit.jupiter:junit-jupiter'
             testImplementation 'org.junit.jupiter:junit-jupiter-engine'
             testImplementation 'org.junit.jupiter:junit-jupiter-api'

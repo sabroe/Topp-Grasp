@@ -31,7 +31,7 @@ tasks.withType(JavaCompile) {
 
         failOnNoGitDirectory = false
 
-/*
+/* TODO: Resolve? Versus what is default?
         keys =
         [
             'git.branch',
@@ -39,5 +39,23 @@ tasks.withType(JavaCompile) {
             'git.commit.time'
         ]
 */
+
+/* TODO: Resolve? Versus what is default?
+        keys =
+        [
+            'git.branch',
+            'git.build.host',
+            'git.build.user.email',
+            'git.build.user.name',
+            'git.build.version',
+            'git.commit.id',
+            'git.commit.time',
+            'git.branch',
+            'git.dirty',
+            'git.remote.origin.url',
+            'git.tags'
+        ]
+
+ */
     }
 }

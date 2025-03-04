@@ -29,19 +29,19 @@ plugins.withType(JavaLibraryPlugin) {  //Note: 'JavaPlugin' includes 'JavaLibrar
             if (configurations.findByName('api')) {
                 //Use 'api' if available (implies java-library plugin is applied)
                 logger.debug("[${buildscript.sourceFile.name}]:> Applying 'api' dependencies.")
-                api 'org.slf4j:slf4j-api:2.0.16'
-                api 'org.slf4j:slf4j-ext:2.0.16'
+                api 'org.slf4j:slf4j-api:2.0.17'
+                api 'org.slf4j:slf4j-ext:2.0.17'
             } else {
                 //Fallback to 'implementation' (implies only java plugin is applied)
                 logger.debug("[${buildscript.sourceFile.name}]:> Applying 'implementation' dependencies.")
-                implementation 'org.slf4j:slf4j-api:2.0.16'
-                implementation 'org.slf4j:slf4j-ext:2.0.16'
+                implementation 'org.slf4j:slf4j-api:2.0.17'
+                implementation 'org.slf4j:slf4j-ext:2.0.17'
             }
 
             //Apply testImplementation only for intermediate libraries
             if (configurations.findByName('api')) {
                 logger.debug("[${buildscript.sourceFile.name}]:> Applying 'testImplementation' dependencies.")
-                testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+                testImplementation 'org.slf4j:slf4j-simple:2.0.17'
             }
         }
     }

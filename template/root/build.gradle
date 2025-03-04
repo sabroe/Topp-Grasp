@@ -25,12 +25,14 @@ buildscript {
 }
 
 plugins {
-    id "org.sonarqube" version "5.1.0.4882" apply false  //TODO: Upgrade to 6.0.1.5171! See https://plugins.gradle.org/plugin/org.sonarqube
+//    id "org.sonarqube" version "5.1.0.4882" apply false  //TODO: Upgrade to 6.0.1.5171! See https://plugins.gradle.org/plugin/org.sonarqube
+    id "org.sonarqube" version "6.0.1.5171" apply false  //See https://plugins.gradle.org/plugin/org.sonarqube
     id "checkstyle"
     id "jacoco"
-    id "de.obqo.decycle" version "1.2.1" apply false
-    id 'org.cyclonedx.bom' version '1.10.0' apply false  //TODO: Upgrade to 2.0.0! See https://plugins.gradle.org/plugin/org.cyclonedx.bom
-    id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false
+    id "de.obqo.decycle" version "1.2.2" apply false  //See https://plugins.gradle.org/plugin/de.obqo.decycle
+    id 'org.cyclonedx.bom' version '2.2.0' apply false  //See https://plugins.gradle.org/plugin/org.cyclonedx.bom
+    id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false  //See https://plugins.gradle.org/plugin/com.gorylenko.gradle-git-properties
+
 }
 
 def fragmentDir = "${rootProject.projectDir}/gradle/fragment"

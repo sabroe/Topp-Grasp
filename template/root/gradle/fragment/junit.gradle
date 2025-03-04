@@ -26,7 +26,7 @@ plugins.withType(JavaPlugin) {  //Note: 'JavaPlugin' includes 'JavaLibraryPlugin
     } else {
         dependencies {
             logger.debug("[${buildscript.sourceFile.name}]:> Applying 'testImplementation' dependencies.")
-            testImplementation(platform('org.junit:junit-bom:5.11.4'))
+            testImplementation(platform('org.junit:junit-bom:5.12.0'))
             testImplementation 'org.junit.jupiter:junit-jupiter'
             testImplementation 'org.junit.jupiter:junit-jupiter-engine'
             testImplementation 'org.junit.jupiter:junit-jupiter-api'

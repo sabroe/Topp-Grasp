@@ -17,31 +17,43 @@
  * limitations under the License.
  */
 
+def isFeatureEnabled(String name, boolean defaultValue = true) {
+    def enabled = custom["feature.${name}.enable"]?.toBoolean() ?: defaultValue
+    if (!enabled) {
+        logger.debug("Feature '${name}' is disabled.")
+    } else {
+        logger.debug("Feature '${name}' is enabled.")
+    }
+    return enabled
+}
+
 plugins.withType(JavaLibraryPlugin) {  //Note: 'JavaPlugin' includes 'JavaLibraryPlugin'; both intermediate libraries and end-applications are included!
     logger.debug("[${buildscript.sourceFile.name}]:> Plugins applied: ${plugins*.class.simpleName}")
-    def enableFeatureText = custom['feature.slf4j.enable']?.toString()?.trim()
-    def enableFeature = enableFeatureText ? enableFeatureText.toBoolean() : true
-    if (!enableFeature) {
-        logger.debug("Feature 'SLF4J' is disabled.")
-    } else {
+    if (isFeatureEnabled('slf4j')) {
         dependencies {
             logger.debug("[${buildscript.sourceFile.name}]:> Available configurations: ${configurations.names}")
+            def slf4jVersion = project.properties['slf4j.version'] ?: '2.0.17'
+            constraints {
+                api "org.slf4j:slf4j-api:${slf4jVersion}"
+                api "org.slf4j:slf4j-ext:${slf4jVersion}"
+                testImplementation "org.slf4j:slf4j-simple:${slf4jVersion}"
+            }
             if (configurations.findByName('api')) {
                 //Use 'api' if available (implies java-library plugin is applied)
                 logger.debug("[${buildscript.sourceFile.name}]:> Applying 'api' dependencies.")
-                api 'org.slf4j:slf4j-api:2.0.17'
-                api 'org.slf4j:slf4j-ext:2.0.17'
+                api 'org.slf4j:slf4j-api'
+                api 'org.slf4j:slf4j-ext'
             } else {
                 //Fallback to 'implementation' (implies only java plugin is applied)
                 logger.debug("[${buildscript.sourceFile.name}]:> Applying 'implementation' dependencies.")
-                implementation 'org.slf4j:slf4j-api:2.0.17'
-                implementation 'org.slf4j:slf4j-ext:2.0.17'
+                implementation 'org.slf4j:slf4j-api'
+                implementation 'org.slf4j:slf4j-ext'
             }
 
             //Apply testImplementation only for intermediate libraries
             if (configurations.findByName('api')) {
                 logger.debug("[${buildscript.sourceFile.name}]:> Applying 'testImplementation' dependencies.")
-                testImplementation 'org.slf4j:slf4j-simple:2.0.17'
+                testImplementation 'org.slf4j:slf4j-simple'
             }
         }
     }

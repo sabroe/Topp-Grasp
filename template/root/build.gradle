@@ -25,13 +25,12 @@ buildscript {
 }
 
 plugins {
-//    id "org.sonarqube" version "5.1.0.4882" apply false  //TODO: Upgrade to 6.0.1.5171! See https://plugins.gradle.org/plugin/org.sonarqube
-    id "org.sonarqube" version "6.0.1.5171" apply false  //See https://plugins.gradle.org/plugin/org.sonarqube
+    id "org.sonarqube" version "6.0.1.5360" apply false  //See https://plugins.gradle.org/plugin/org.sonarqube, 6.1.0.5360 from 2025-03-25.
     id "checkstyle"
     id "jacoco"
-    id "de.obqo.decycle" version "1.2.2" apply false  //See https://plugins.gradle.org/plugin/de.obqo.decycle
-    id 'org.cyclonedx.bom' version '2.2.0' apply false  //See https://plugins.gradle.org/plugin/org.cyclonedx.bom
-    id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false  //See https://plugins.gradle.org/plugin/com.gorylenko.gradle-git-properties
+    id "de.obqo.decycle" version "1.2.3" apply false  //See https://plugins.gradle.org/plugin/de.obqo.decycle, 1.2.3 from 2025-03-06.
+    id 'org.cyclonedx.bom' version '2.2.0' apply false  //See https://plugins.gradle.org/plugin/org.cyclonedx.bom, 2.2.0 from 2025-02-26.
+    id "com.gorylenko.gradle-git-properties" version "2.5.0" apply false  //See https://plugins.gradle.org/plugin/com.gorylenko.gradle-git-properties, 2.5.0 from 2025-03-07.
 
 }
 
@@ -61,6 +60,7 @@ subprojects {
     apply from: "${fragmentDir}/decycle.gradle"
     apply from: "${fragmentDir}/cyclonedx.gradle"
     apply from: "${fragmentDir}/git-properties.gradle"
+    apply from: "${fragmentDir}/project-info.gradle"
 }
 
 /*

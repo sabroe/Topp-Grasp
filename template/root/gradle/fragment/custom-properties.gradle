@@ -17,41 +17,121 @@
  * limitations under the License.
  */
 
-import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.ZonedDateTime
 
-def buildTime = new Date()
-def buildTimeBySecond = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(buildTime)
-def buildTimeByMinute = new SimpleDateFormat("yyyy-MM-dd-HHmm").format(buildTime)
-def buildTimeByDay = new SimpleDateFormat("yyyy-MM-dd").format(buildTime)
+def buildZonedTime = ZonedDateTime.now()
+def buildTimeZulu = DateTimeFormatter.ISO_INSTANT.format(buildZonedTime)  //E.g., '2011-12-03T10:15:30Z', always UTC time.
+def buildTimeOffset = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(buildZonedTime)  //E.g., '2011-12-03T10:15:30+01:00', actual offset.
+def buildTimeZoned = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(buildZonedTime)  //E.g., '2011-12-03T10:15:30+01:00[Europe/Copenhagen]', actual offset and zone.
+def buildTime = buildTimeZulu
+def sanitizedBuildTime = buildTime.replace('T', '-').replace(':', '')  //E.g., '2025-04-02-174530Z'
 
 allprojects {
-    def localProperties = new Properties()
-    def file = file("custom.properties")
-    logger.info(":> Properties file name: ${file}")
-    if (file.exists()) {
-        localProperties.load(file.newReader())
+    ext.custom = new Properties()  //Reset all custom properties
+    ext.nonRootGradle = new Properties()  //Reset all non-root "Gradle" properties
+
+    /*
+     * Set all default custom properties.
+     * Allows for later overwrite.
+     */
+    {
+        ext.custom['build-time'] = buildTime
+        ext.custom['build-time-zulu'] = buildTimeZulu
+        ext.custom['build-time-offset'] = buildTimeOffset
+        ext.custom['build-time-zoned'] = buildTimeZoned
     }
 
-    ext.custom = new Properties()
-    if (parent != null) {
-        ext.custom.putAll(parent.ext.custom)
+    /*
+     * Populate custom properties from parent custom properties and local module file "custom.properties".
+     * All custom properties are inherited from the root project and down through all sub-modules.
+     * Each custom property can be accessed as 'ext.custom.xxx' or just 'custom.xxx'.
+     * Inherited custom properties is a main feature.
+     */
+    {
+        def fileName="custom.properties"
+        def properties = new Properties()
+        def file = file(fileName)
+        logger.info("[${buildscript.sourceFile.name}]:> Looking for properties file: ${file}")
+        if (file.exists()) {
+            properties.load(file.newReader())
+            logger.info("[${buildscript.sourceFile.name}]:> Did find and read properties file: ${file}")
+        }
+
+        if (parent != null) {
+            ext.custom.putAll(parent.ext.custom)
+        }
+        ext.custom.putAll(properties)
+
+        logger.debug("[${buildscript.sourceFile.name}]:> Custom properties introduced by parent module: " + (parent == null ? null : parent.ext.custom))
+        logger.debug("[${buildscript.sourceFile.name}]:> Custom properties introduced by local module: " + properties)
+        logger.debug("[${buildscript.sourceFile.name}]:> Custom properties resolved: " + ext.custom)
     }
-    ext.custom.putAll(localProperties)
 
-    ext.custom['build-time'] = buildTime
-    ext.custom['build-time-by-second'] = buildTimeBySecond
-    ext.custom['build-time-by-minute'] = buildTimeByMinute
-    ext.custom['build-time-by-day'] = buildTimeByDay
+    /*
+     * Populate project properties from parent, non-root properties and local module file "gradle.properties.
+     * This allows some opening to move root projects down to become sub-modules and transfer "gradle.properties"
+     * with either their full or part content down to a sub-module and without too much hassle like e.g. moving the properties.
+     * For now, this feature is a convenience more like an actually intended functionality.
+     */
+    {
+        if (project != rootProject) {  //Only load for submodules; standard reading applies for Gradle root properties!
+            def fileName = "gradle.properties"
+            def properties = new Properties()
+            def file = file(fileName)
+            logger.info("[${buildscript.sourceFile.name}]:> Looking for properties file: ${file}")
+            if (file.exists()) {
+                properties.load(file.newReader())
+                logger.info("[${buildscript.sourceFile.name}]:> Did find and read properties file: ${file}")
+            }
 
-    logger.info(":> Parent extension properties: " + (parent == null ? null : parent.ext.custom))
-    logger.info(":> Local properties:            " + localProperties)
-    logger.info(":> Extension properties:        " + ext.custom)
+            if (parent != null) {
+                ext.nonRootGradle.putAll(parent.ext.nonRootGradle)
+            }
+            ext.nonRootGradle.putAll(properties)
 
-    project.group = custom['project.group'] ?: 'io.github.sabroe.topp'
-    project.version = custom['project.version'] ?: buildTimeBySecond
+            ext.nonRootGradle.each { key, value ->
+                project.setProperty(key, value)
+            }
 
-    logger.info(":> Project name:      $project.name")
-    logger.info(":> Project directory: $project.projectDir")
-    logger.info(":> Project version:   $project.version")
-    logger.info(":> Project group:     $project.group")
+            logger.debug("[${buildscript.sourceFile.name}]:> Non-root \"Gradle\" properties introduced by parent module: " + (parent == null ? null : parent.ext.nonRootGradle))
+            logger.debug("[${buildscript.sourceFile.name}]:> Non-root \"Gradle\" properties introduced by local module: " + properties)
+            logger.debug("[${buildscript.sourceFile.name}]:> Non-root \"Gradle\" properties resolved: " + ext.nonRootGradle)
+        }
+    }
+
+    /*
+     * Populate project properties with additional properties from local module file "local.properties".
+     * This allows for a forced override of project properties within a local sub-module.
+     * Local, forced override of project properties is a main feature.
+     */
+    {
+        def fileName="local.properties"
+        def properties = new Properties()
+        def file = file(fileName)
+        logger.info("[${buildscript.sourceFile.name}]:> Looking for properties file: ${file}")
+        if (file.exists()) {
+            properties.load(file.newReader())
+            logger.info("[${buildscript.sourceFile.name}]:> Did find and read properties file: ${file}")
+        }
+
+        properties.each { key, value ->
+            project.setProperty(key, value)
+        }
+
+        logger.debug("[${buildscript.sourceFile.name}]:> Project properties introduced by local module: " + properties)
+    }
+
+    logger.debug("[${buildscript.sourceFile.name}]:> Project properties: " + project.properties.findAll { it.key != 'parent' && it.key != 'rootProject' })
+
+    /*
+     * Set project group and version, if not already set.
+     * With fallback from first custom properties and otherwise fixed values.
+     * This construction allows to set the project group and version just once in the custom properties file in
+     * the root of the project while allowing for a local overwrite within a sub-module, if necessary.
+     */
+    {
+        project.group = project.group ?: custom['project.group'] ?: 'com.example'
+        project.version = project.version ?: custom['project.version'] ?: sanitizedBuildTime
+    }
 }

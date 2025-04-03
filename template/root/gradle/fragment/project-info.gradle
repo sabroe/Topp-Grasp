@@ -17,15 +17,9 @@
  * limitations under the License.
  */
 
-plugins.withType(JacocoPlugin) {
-    jacoco {
-        toolVersion = "0.8.13"  //Version 0.8.13 from 2025-04-02.
-//          reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
-    }
-    test {
-        finalizedBy jacocoTestReport // report is always generated after tests run
-    }
-    jacocoTestReport {
-        dependsOn test // tests are required to run before generating the report
-    }
+allprojects {
+    logger.info("[${buildscript.sourceFile.name}]:> Project name:      $project.name")
+    logger.info("[${buildscript.sourceFile.name}]:> Project directory: $project.projectDir")
+    logger.info("[${buildscript.sourceFile.name}]:> Project version:   $project.version")
+    logger.info("[${buildscript.sourceFile.name}]:> Project group:     $project.group")
 }
